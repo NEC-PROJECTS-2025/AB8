@@ -5,7 +5,9 @@ Adaptive Intrusion Detection in CAN-Based Vehicular Networks Using Transfer Lear
 **Team Details :**
 
 Shaik Yalavarthi Ijaz Ahamad
+
 Sinde Venkata Saptha Girish
+
 Tammisetti Nagendra Babu
 
 **INTRODUCTION**
