@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Adaptive IDS{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: url('/static/images/bg1.jpg') no-repeat center center fixed;
+        background-size: cover;
+        color: white;
+        font-size: 1.1em; /* Increased base font size */
+    }
+    h2 {
+        color: #78e4e7;
+        font-size: 2em; /* Increased size for h2 */
+    }
+    h3 {
+        color: #78e4e7;
+        font-size: 2em; /* Increased size for h3 */
+    }
+    p {
+        font-size: 1.2em; /* Increased font size for paragraphs */
+    }
+    ul {
+        font-size: 1.2em; /* Increased font size for list items */
+    }
+</style>
+
+<section class="home-section">
+    <h2>Welcome to Adaptive IDS</h2>
+    <p>Welcome to Adaptive IDS, a state-of-the-art Intrusion Detection System (IDS) designed to secure modern connected and autonomous vehicles from evolving cyber threats. With the increasing reliance on Controller Area Networks (CAN) for vehicle communication, the risk of cyberattacks has grown significantly. Our IDS uses Artificial Intelligence and Deep Learning to provide real-time monitoring, detection, and mitigation of malicious activities within the CAN network. Whether it's Denial of Service (DoS), Fuzzy, RPM Spoofing, or Gear Spoofing attacks, our system ensures robust vehicle security with over 99% accuracy and a 65% reduction in computational overhead compared to traditional IDS solutions.</p>
+
+    <h3>Project Overview</h3>
+    <p>The Adaptive IDS system is built using a Hybrid AI model that integrates Convolutional Neural Networks (CNN) for spatial pattern detection and Long Short-Term Memory (LSTM) networks for analyzing temporal sequences in CAN traffic. This hybrid approach enables early threat detection and high-precision attack classification, minimizing the chances of false positives. Transfer Learning is employed to allow the system to adapt dynamically to new attack vectors, ensuring long-term reliability with minimal retraining efforts. The dataset used for training includes real-world CAN traffic data, allowing the system to learn and generalize attack patterns effectively. The IDS is designed to be lightweight, efficient, and scalable, making it suitable for modern and next-generation smart vehicles.</p>
+
+    <h3>Key Features</h3>
+    <p>Our Adaptive IDS provides a range of cutting-edge features that enhance vehicular cybersecurity:</p>
+    <ul>
+        <li> <strong>High Detection Accuracy (99%+)</strong> – Ensures precise and reliable attack detection across multiple attack types.</li>
+        <li> <strong>Real-Time Threat Monitoring</strong> – Continuously scans CAN traffic to detect anomalies instantly, preventing potential breaches.</li>
+        <li> <strong>Adaptive Learning with Transfer Learning</strong> – Recognizes new cyber threats with minimal retraining, making it future-proof.</li>
+        <li> <strong>Lightweight & Computationally Efficient</strong> – Uses optimized deep learning models to reduce processing overhead by 65%, making it suitable for real-time deployment in vehicles.</li>
+        <li> <strong>Seamless Integration</strong> – Designed for compatibility with Electronic Control Units (ECUs) and existing automotive security frameworks, enabling easy adoption in modern vehicles.</li>
+    </ul>
+</section>
+{% endblock %}

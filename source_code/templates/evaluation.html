@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}Model Evaluation - Adaptive IDS{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: url('/static/images/bg1.jpg') no-repeat center center fixed;
+        background-size: cover;
+        color: white;
+        font-size: 1.1em; /* Increased base font size */
+    }
+    h2 {
+        color: #78e4e7;
+        font-size: 2em; /* Increased size for h2 */
+    }
+    h3 {
+        color: #78e4e7;
+        font-size: 2em; /* Increased size for h3 */
+    }
+    p {
+        font-size: 1.2em; /* Increased font size for paragraphs */
+    }
+    ul {
+        font-size: 1.2em; /* Increased font size for list items */
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    
+    .evaluation-table {
+        width: 50%;
+        border-collapse: collapse;
+        margin: 20px auto;
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+    }
+    .evaluation-table th, .evaluation-table td {
+        border: 1px solid white;
+        padding: 10px;
+        text-align: center;
+    }
+    .evaluation-table th {
+        background-color: #78e4e7;
+        color: black;
+    }
+</style>
+
+<div class="content">
+    <h2>Model Evaluation</h2>
+    <p>Evaluating the performance of our Intrusion Detection System (IDS) is crucial to ensure its effectiveness in detecting cyber threats in vehicular networks. Our evaluation process involves several key metrics and methodologies.</p>
+    
+    <h3>Performance Metrics:</h3>
+    <ul>
+        <li><strong>Accuracy:</strong> Measures the overall correctness of the model's predictions.</li>
+        <li><strong>Precision:</strong> Indicates the quality of positive predictions, showing the percentage of true positives among all positive predictions.</li>
+        <li><strong>Recall (Sensitivity):</strong> Reflects the model's ability to identify all relevant positive instances.</li>
+        <li><strong>F1 Score:</strong> The harmonic mean of precision and recall, providing a balanced measure of the model's performance.</li>
+    </ul>
+
+    <h3>Evaluation Results:</h3>
+    <table class="evaluation-table">
+        <thead>
+            <tr>
+                <th>Model</th>
+                <th>Accuracy (%)</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1-Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Hybrid Transfer Learning</td>
+                <td>99.82</td>
+                <td>0.9982</td>
+                <td>0.9982</td>
+                <td>0.9982</td>
+            </tr>
+            <tr>
+                <td>Hybrid CNN-LSTM</td>
+                <td>99.82</td>
+                <td>0.9980</td>
+                <td>0.9985</td>
+                <td>0.9982</td>
+            </tr>
+            <tr>
+                <td>RNN</td>
+                <td>99.82</td>
+                <td>0.9975</td>
+                <td>0.9980</td>
+                <td>0.9977</td>
+            </tr>
+            <tr>
+                <td>Random Forest</td>
+                <td>95.65</td>
+                <td>0.9543</td>
+                <td>0.9670</td>
+                <td>0.9606</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Conclusion:</h3>
+    <p>The evaluation results underscore the efficacy and efficiency of our IDS, highlighting its potential applicability in enhancing automotive cybersecurity. Future work will focus on further refining the model and exploring additional attack scenarios to ensure comprehensive protection.</p>
+</div>
+{% endblock %}

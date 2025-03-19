@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+
+{% block title %}Predictions - Adaptive IDS{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: url("{{ url_for('static', filename='images/bg1.jpg') }}") no-repeat center center fixed;
+        background-size: cover;
+        color: white;
+        font-family: Arial, sans-serif;
+        text-align: center;
+    }
+    .container {
+        background: rgba(0, 0, 0, 0.7);
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 800px; /* Increased width to accommodate two tables */
+        margin: 50px auto;
+    }
+    h2 {
+        color: #78e4e7;
+    }
+    input, button {
+        padding: 10px;
+        margin: 10px;
+        border-radius: 5px;
+        border: none;
+    }
+    button {
+        background-color: #78e4e7;
+        color: black;
+        cursor: pointer;
+    }
+    table {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: collapse;
+        color: white;
+    }
+    th, td {
+        border: 1px solid white;
+        padding: 10px;
+        text-align: center;
+    }
+    th {
+        background-color:#78e4e7;
+        color: black;
+    }
+    .error-message {
+        color: red;
+        font-weight: bold;
+    }
+    .table-container {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px; /* Space between the two tables */
+    }
+    .table-container table {
+        width: 48%; /* Each table takes up roughly half the container width */
+    }
+</style>
+
+<div class="container">
+    <h2>Prediction Form</h2>
+    
+    <form id="predictionForm">
+        <label for="can_id">CAN ID:</label>
+        <input type="text" id="can_id" name="can_id" placeholder="0x123" required>
+        <br>
+
+        <label for="data">Data Bytes:</label>
+        <input type="text" id="data" name="data" placeholder="01 0x2A 45 0x1F 10 0xFF 0x00 99" required>
+        <br>
+
+        <button type="submit">Predict</button>
+    </form>
+
+    <div id="predictionResult"></div>
+
+    <h2>Valid Predictions</h2>
+    <table id="validTable">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>CAN ID</th>
+                <th>Data Bytes</th>
+                <th>Prediction</th>
+                <th>Confidence</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in history %}
+                {% if not entry.error %}
+                <tr>
+                    <td>{{ entry.timestamp }}</td>
+                    <td>{{ entry.can_id }}</td>
+                    <td>{{ entry.data }}</td>
+                    <td>{{ entry.prediction }}</td>
+                    <td>{{ entry.confidence }}%</td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Invalid Predictions</h2>
+    <table id="invalidTable">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>CAN ID</th>
+                <th>Data Bytes</th>
+                <th>Error Message</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in history %}
+                {% if entry.error %}
+                <tr>
+                    <td>{{ entry.timestamp }}</td>
+                    <td>{{ entry.can_id }}</td>
+                    <td>{{ entry.data }}</td>
+                    <td class="error-message">{{ entry.error }}</td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById('predictionForm').addEventListener('submit', function (e) {
+        e.preventDefault(); // Prevent form submission
+
+        var can_id = document.getElementById('can_id').value.trim();
+        var data = document.getElementById('data').value.trim();
+
+        // Validate CAN ID (must start with 0x and be a valid hexadecimal)
+        var canIdPattern = /^0x[0-9A-Fa-f]+$/;
+        if (!canIdPattern.test(can_id)) {
+            addErrorRow(can_id, data, "Invalid CAN ID! It must start with '0x' and be a valid hexadecimal (e.g., 0x1A).");
+            return;
+        }
+
+        // Validate Data Bytes (must be exactly 8 values)
+        var dataArray = data.split(/\s+/);
+        if (dataArray.length !== 8) {
+            addErrorRow(can_id, data, "Invalid Data Bytes! You must enter exactly 8 space-separated values (decimal or hex).");
+            return;
+        }
+
+        // Validate each data byte (must be decimal 0-255 or hexadecimal 00-FF, 0x00-0xFF)
+        var validHexOrDec = /^((0x[0-9A-Fa-f]{1,2})|([A-Fa-f0-9]{2})|([0-9]{1,3}))$/;
+        var parsedData = [];
+
+        for (var i = 0; i < dataArray.length; i++) {
+            let value = dataArray[i];
+
+            if (!validHexOrDec.test(value)) {
+                addErrorRow(can_id, data, "Invalid Data Byte at position " + (i + 1) + "! Each value must be a valid decimal (0-255) or hexadecimal (00-FF, 0x00-0xFF).");
+                return;
+            }
+
+            // Convert hex to decimal if necessary
+            if (value.startsWith("0x")) {
+                parsedData.push(parseInt(value, 16)); // Convert hex (0xNN) to decimal
+            } else if (/^[A-Fa-f0-9]{2}$/.test(value)) {
+                parsedData.push(parseInt(value, 16)); // Convert hex (NN) to decimal
+            } else {
+                let numValue = parseInt(value, 10);
+                if (numValue < 0 || numValue > 255) {
+                    addErrorRow(can_id, data, "Invalid Data Byte at position " + (i + 1) + "! Decimal values must be between 0-255.");
+                    return;
+                }
+                parsedData.push(numValue);
+            }
+        }
+
+        // Prepare request data
+        var requestData = {
+            can_id: can_id,
+            data: parsedData
+        };
+
+        // Send AJAX request
+        fetch('/predictions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                addErrorRow(can_id, data.data.data_bytes.join(' '), data.error);
+            } else {
+                addValidRow(data.timestamp, data.data.can_id, data.data.data_bytes.join(' '), data.prediction, data.confidence);
+            }
+
+            // Clear input fields
+            document.getElementById('can_id').value = '';
+            document.getElementById('data').value = '';
+        })
+        .catch(error => {
+            addErrorRow(can_id, data, "Error: " + error.message);
+        });
+    });
+
+    function addValidRow(timestamp, can_id, data, prediction, confidence) {
+        const table = document.getElementById('validTable').getElementsByTagName('tbody')[0];
+        const newRow = table.insertRow();
+
+        newRow.insertCell(0).textContent = timestamp;
+        newRow.insertCell(1).textContent = can_id;
+        newRow.insertCell(2).textContent = data;
+        newRow.insertCell(3).textContent = prediction;
+        newRow.insertCell(4).textContent = confidence + "%";
+    }
+
+    function addErrorRow(can_id, data, errorMessage) {
+        const table = document.getElementById('invalidTable').getElementsByTagName('tbody')[0];
+        const newRow = table.insertRow();
+
+        newRow.insertCell(0).textContent = new Date().toLocaleString(); // Current timestamp
+        newRow.insertCell(1).textContent = can_id;
+        newRow.insertCell(2).textContent = data;
+        const errorCell = newRow.insertCell(3);
+        errorCell.textContent = errorMessage;
+        errorCell.classList.add('error-message'); // Add error styling
+    }
+});
+</script>
+{% endblock %}

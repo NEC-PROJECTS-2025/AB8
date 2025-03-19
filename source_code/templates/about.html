@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}About - Adaptive IDS{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: url('/static/images/bg1.jpg') no-repeat center center fixed;
+        background-size: cover;
+        color: white;
+        font-size: 1.1em; /* Increased base font size */
+    }
+    h2 {
+        color: #78e4e7;
+        font-size: 2em; /* Increased size for h2 */
+    }
+    h3 {
+        color: #78e4e7;
+        font-size: 2em; /* Increased size for h3 */
+    }
+    p {
+        font-size: 1.2em; /* Increased font size for paragraphs */
+    }
+    ul {
+        font-size: 1.2em; /* Increased font size for list items */
+    }
+</style>
+
+<section class="about-section">
+    <h2>About the Project</h2>
+    <p>With the increasing connectivity of modern vehicles, cybersecurity has become a critical concern. The Controller Area Network (CAN), which enables communication between vehicle components, is vulnerable to cyberattacks that can manipulate vehicle behavior, leading to safety risks. Our Intrusion Detection System (IDS) is developed to detect, prevent, and mitigate these attacks in real time. By leveraging deep learning, transfer learning, and traditional machine learning techniques, our system enhances security, efficiency, and adaptability in automotive networks.</p>
+
+    <h3>Project Methodology</h3>
+    <p>Our approach involves a hybrid AI model that combines Convolutional Neural Networks (CNN) for spatial feature extraction and Long Short-Term Memory (LSTM) networks for temporal pattern analysis. Additionally, we integrate Transfer Learning, which allows the system to adapt to new attack patterns with minimal retraining. The data preprocessing phase includes data cleaning, normalization, feature selection, and augmentation to improve model accuracy. The system is evaluated using real-world CAN datasets to ensure high detection accuracy and low false alarm rates.</p>
+
+    <h3>Advantages</h3>
+    <ul>
+        <li> <strong>High Detection Accuracy (99%+)</strong> – Effectively detects multiple attack types.</li>
+        <li><strong>Real-Time Monitoring</strong> – Identifies intrusions instantly for proactive security.</li>
+        <li> <strong>Adaptive Learning</strong> – Uses Transfer Learning to recognize new cyber threats.</li>
+        <li> <strong>Lightweight & Efficient</strong> – Reduces computational overhead by 65%.</li>
+        <li> <strong>Seamless Integration</strong> – Can be deployed in modern and next-gen vehicles.</li>
+    </ul>
+
+    <h3>System Requirements</h3>
+    <ul>
+        <li><strong>Hardware:</strong> Minimum 8GB RAM, GPU (for training), and a CAN data interface.</li>
+        <li><strong>Software:</strong> Python, TensorFlow/Keras, Scikit-learn, and OpenCV (for data preprocessing).</li>
+        <li><strong>Dataset:</strong> Car-Hacking Dataset with attack logs for model training and evaluation.</li>
+        <li><strong>Deployment:</strong> Supports integration with ECUs (Electronic Control Units) and automotive security frameworks.</li>
+    </ul>
+</section>
+{% endblock %}

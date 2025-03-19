@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Flowcharts - Adaptive IDS{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: url("{{ url_for('static', filename='images/bg1.jpg') }}") no-repeat center center fixed;
+        background-size: cover;
+        color: white;
+        font-family: Arial, sans-serif;
+        text-align: center;
+    }
+    h2 {
+        color: #78e4e7;
+    }
+</style>
+    <h2>System Flowcharts</h2>
+    <img src="{{ url_for('static', filename='images/flow.png') }}" alt="System Flowchart">
+{% endblock %}
